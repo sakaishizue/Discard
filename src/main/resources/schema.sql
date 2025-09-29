@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS article;
+DROP TABLE IF EXISTS t_type;
+DROP TABLE IF EXISTS t_effort;
+
+CREATE TABLE article (
+	discarded_date DATE PRIMARY KEY,
+	title VARCHAR(30) NOT NULL,
+	imagefilename VARCHAR(50) ,
+	trashtype INT,
+	effort INT,	
+	created_at timestamp without time zone,
+	updated_at timestamp without time zone
+);
+
+CREATE TABLE t_type (
+	id INT PRIMARY KEY,
+	name VARCHAR(10)
+);
+
+CREATE TABLE t_effort (
+	id INT PRIMARY KEY,
+	name VARCHAR(10)
+);

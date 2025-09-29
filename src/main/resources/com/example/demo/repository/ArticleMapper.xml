@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.ArticleMapper">
+	<!-- Articleのリザルトマップ -->
+	<resultMap id="ArticleResult" type="com.example.demo.entity.Article">
+		<id property="date" column="date" />
+		<result property="title" column="title" />
+		<result property="imageFileName" column="imagefilename" />
+		<result property="createdAt" column="createdAt" />
+		<result property="updatedAt" column="updatedAt" />
+		<association property="trashType" javaType="com.example.demo.entity.TrashType">
+			<id property="id" column="trash_id" />
+			<result property="name" column="trash_name" />
+		</association>
+		<association property="effort" javaType="com.example.demo.entity.Effort">
+			<id property="id" column="effort_id" />
+			<result property="name" column="effort_name" />
+		</association>
+	</resultMap>
+	<!-- 全件検索 -->
+	<select id="selectAll" resultMap="ArticleResult">
+		SELECT a.discarded_date as date,a.title,a.imagefilename,
+		t.id as trash_id,t.name as trash_name,
+		e.id as effort_id,e.name as effort_name,
+		created_at as createdAt,updated_at as updatedAt
+		FROM article as a
+		JOIN t_type as t ON a.trashtype = t.id
+		JOIN t_effort as e ON a.effort = e.id
+	</select>
+	<!--1件検索 -->
+	<select id="selectByDate" resultMap="ArticleResult">
+		SELECT a.discarded_date as date,a.title,a.imagefilename,
+		t.id as trash_id,t.name as trash_name,
+		e.id as effort_id,e.name as effort_name,
+		created_at as createdAt,updated_at as updatedAt
+		FROM article as a
+		JOIN t_type as t ON a.trashtype = t.id
+		JOIN t_effort as e ON a.effort = e.id
+		WHERE a.discarded_date = #{date}
+	</select>
+	<!--範囲検索 -->
+	<select id="selectByMonth" resultMap="ArticleResult">
+		SELECT a.discarded_date as date,a.title,a.imagefilename,
+		t.id as trash_id,t.name as trash_name,
+		e.id as effort_id,e.name as effort_name,
+		created_at as createdAt,updated_at as updatedAt
+		FROM article as a
+		JOIN t_type as t ON a.trashtype = t.id
+		JOIN t_effort as e ON a.effort = e.id
+		WHERE a.discarded_date BETWEEN #{startdate} AND #{enddate}
+		ORDER BY date DESC 
+	</select>
+	<!-- 登録 -->
+	<insert id="insert" parameterType="com.example.demo.entity.Article">
+		INSERT INTO Article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
+		VALUES
+		(#{date},#{title},#{imageFileName},#{trashType.id},#{effort.id},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
+	</insert>
+	<!-- 更新 -->
+	<update id="update" parameterType="com.example.demo.entity.Article">
+		UPDATE Article SET title = #{title},imagefilename = #{imageFileName},
+		trashtype = #{trashType.id},effrot = #{effort.id},updated_at = CURRENT_TIMESTAMP WHERE discarded_date = #{date}
+	</update>
+	<!-- 削除 -->
+	<delete id="delete">
+		DELETE FROM Article WHERE discarded_date = #{date}
+	</delete>
+	
+</mapper>
