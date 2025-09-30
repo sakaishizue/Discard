@@ -43,7 +43,7 @@
     <div class="container-fluid">
         <div class="row">
             
-            <nav class="col-lg-3 bg-light p-3">
+            <nav class="col-lg-3 bg-light p-3 pt-5 pb-4">
                 <button class="btn btn-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
                     サイドバーを開く
                 </button>
@@ -112,7 +112,7 @@
                 </div>
             </nav>
 
-            <main class="content-wrapper col-lg-9 p-3"　>
+            <main class="content-wrapper col-lg-9 p-3 pt-5 pb-4"　>
 				<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 				<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 				<div th:if="${articles}">

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -63,6 +64,7 @@ public class ArticleController {
 	}
 
 	@PostMapping("/saveArticle")
+	@Transactional
 	public String saveArticle(@Validated ArticleForm form,BindingResult result,RedirectAttributes attributes,Model model) {
 		if (result.hasErrors()) {
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());

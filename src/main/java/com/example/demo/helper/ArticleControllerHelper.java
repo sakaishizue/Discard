@@ -70,12 +70,16 @@ public class ArticleControllerHelper {
 		return article;
 	}
 
-	//記事削除
+	//記事&画像削除
 	public static void deleteArticle(ArticleService service,String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = sdf.parse(dateString);
-            service.deleteArticle(date);
+       try {
+    	   	Date date = sdf.parse(dateString);
+    	   	String fileName = service.findByDateArticle(date).getImageFileName();
+    	    Path fileStorageLocation = Paths.get(System.getenv("IMAGE_UPLOAD_DIR")).toAbsolutePath().normalize();
+    	    Path targetPath = fileStorageLocation.resolve(fileName).normalize();
+    	    Files.deleteIfExists(targetPath);
+           	service.deleteArticle(date);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -88,6 +92,7 @@ public class ArticleControllerHelper {
         try {
     	    Article article = service.findByDateArticle(sdf.parse(dateString));
         	form.setDate(article.getDate());
+        	form.setTitle(article.getTitle());
         	form.setStoredImageFileName(article.getImageFileName());
         	form.setEffortId(article.getEffort().getId());
         	form.setTrashTypeId(article.getTrashType().getId());
