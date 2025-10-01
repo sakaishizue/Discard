@@ -20,6 +20,8 @@ public interface ArticleMapper {
 	void insert(Article article);
 	//更新
 	void update(Article artilce);
+	//更新2
+	void updateWithoutImageFileName(Article artilce);
 	//削除
 	void delete(@Param("date") Date date);
 }

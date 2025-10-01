@@ -72,17 +72,26 @@ public class ArticleController {
 			return "discard/form";
 		}
 		
-		if (form.getImageFile().isEmpty()) {
+		if (form.getImageFile().isEmpty() && form.isNew()) {
 			result.rejectValue("imageFile", "error.imageFile", "ファイルが選択されていません。");
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());
 			return "discard/form";
 		}
         try {
-            String storedFileName = ArticleControllerHelper.storeFile(form.getImageFile());
-            articleService.insertArticle(ArticleControllerHelper.convertArticle(articleService,form,storedFileName));
-            attributes.addFlashAttribute("successMessage", "登録に成功しました。");
-    		return "redirect:/discard";
+            if (form.isNew()) {
+                String storedFileName = ArticleControllerHelper.storeFile(form.getImageFile());
+            	articleService.insertArticle(ArticleControllerHelper.convertArticle(articleService,form,storedFileName));
+            } else {
+            	if (form.getImageFile().isEmpty()) {
+                	articleService.updateArticleWithoutImageFileName(ArticleControllerHelper.convertArticle(articleService, form));
+            	} else {
+                    String storedFileName = ArticleControllerHelper.storeFile(form.getImageFile());
+            		articleService.updateArticle(ArticleControllerHelper.convertArticle(articleService,form,storedFileName));
+            	}
+            }
+        	attributes.addFlashAttribute("successMessage", "登録に成功しました。");
+        	return "redirect:/discard";
         } catch (RuntimeException e) {
         	e.printStackTrace();
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());

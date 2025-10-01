@@ -61,6 +61,11 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
+	public void updateArticleWithoutImageFileName(Article article) {
+		articleMapper.updateWithoutImageFileName(article);
+	}
+
+	@Override
 	public void deleteArticle(Date date) {
 		articleMapper.delete(date);
 	}

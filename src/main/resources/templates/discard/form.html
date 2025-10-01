@@ -38,6 +38,7 @@
 	    <div class="px-3">
 	        <label for="imageFile" class="fw-bold">＜画像＞</label>
 	        <input type="file" id="imageFile" class="form-control" th:field="*{imageFile}" accept="image/*">
+			<div th:unless="*{isNew}" class="text-info">※未入力だと現在の画像が引き継がれます。</div>
 	    </div>
 		<div th:unless="*{isNew}">
 		    <label class="fw-bold px-3">＜現在の画像＞</label>

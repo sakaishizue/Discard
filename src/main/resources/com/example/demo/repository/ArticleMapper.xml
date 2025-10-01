@@ -59,7 +59,12 @@
 	<!-- 更新 -->
 	<update id="update" parameterType="com.example.demo.entity.Article">
 		UPDATE Article SET title = #{title},imagefilename = #{imageFileName},
-		trashtype = #{trashType.id},effrot = #{effort.id},updated_at = CURRENT_TIMESTAMP WHERE discarded_date = #{date}
+		trashtype = #{trashType.id},effort = #{effort.id},updated_at = CURRENT_TIMESTAMP WHERE discarded_date = #{date}
+	</update>
+	<!-- 更新2 -->
+	<update id="updateWithoutImageFileName" parameterType="com.example.demo.entity.Article">
+		UPDATE Article SET title = #{title},
+		trashtype = #{trashType.id},effort = #{effort.id},updated_at = CURRENT_TIMESTAMP WHERE discarded_date = #{date}
 	</update>
 	<!-- 削除 -->
 	<delete id="delete">

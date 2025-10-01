@@ -69,7 +69,9 @@ public class ArticleControllerHelper {
 		
 		return article;
 	}
-
+	public static Article convertArticle(ArticleService service,ArticleForm form) {
+		return convertArticle(service, form, "");
+	}
 	//記事&画像削除
 	public static void deleteArticle(ArticleService service,String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

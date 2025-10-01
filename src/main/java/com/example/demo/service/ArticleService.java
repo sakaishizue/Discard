@@ -26,6 +26,8 @@ public interface ArticleService {
 	void insertArticle(Article article);
 	//記事更新
 	void updateArticle(Article article);
+	//記事更新(画像ファイル名以外)
+	void updateArticleWithoutImageFileName(Article article);
 	//記事削除
 	void deleteArticle(Date date);
 }
