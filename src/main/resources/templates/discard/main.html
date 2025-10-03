@@ -68,10 +68,18 @@
 					<div id='calendar'></div>
 
 					<script th:inline="javascript">
-					    // サーバーサイドから渡された日付を取得
-					    //const initialDate = [[${initialDate}]];
-
+						/*<![CDATA[*/
+						function formatDate(date) {
+						    const year = date.getFullYear();
+						    const month = String(date.getMonth() + 1).padStart(2, '0');
+						    const day = String(date.getDate()).padStart(2, '0');
+						    return `${year}-${month}-${day}`;
+						}
+						
 					    document.addEventListener('DOMContentLoaded', function() {
+							const linksJson = /*[[${LinksJson}]]*/ null; // デフォルトをnullにしておく
+							// linksJson が null でない場合のみ parse し、nullなら空のオブジェクト{}を割り当てる
+							const articleLinks = linksJson ? JSON.parse(linksJson) : {};
 					        var calendarEl = document.getElementById('calendar');
 					        var calendar = new FullCalendar.Calendar(calendarEl, {
 					            initialView: 'dayGridMonth',
@@ -89,19 +97,18 @@
 								navLinks: false,
 								// 日付セルのコンテンツをカスタマイズして枠線を追加
 								dayCellContent: function(arg) {
-							    	return {
-							        	html: `<a href="#" class="custom-day-link" 
-										data-date="${arg.date.getDate()}">${arg.date.getDate()}</a>`
-							    	};
+									const dateStr = formatDate(arg.date);
+									if (articleLinks[dateStr]) {
+									    return {
+									        html: `<a href="${articleLinks[dateStr]}" class="article-link">${arg.date.getDate()}</a>`
+									    };
+									}
+									return { html: arg.date.getDate() };
 								},
-							// 日付クリックイベント
-							dateClick: function(info) {
-							    alert('クリックされた日付: ' + info.dateStr);
-							    // ここに記事を表示する処理を記述
-							}
 					        });
 					        calendar.render();
 					    });
+						/*]]>*/
 					</script>
 					<form th:action="@{/discard/toSave}" method="get">
 					    <button type="submit">記事登録</button>

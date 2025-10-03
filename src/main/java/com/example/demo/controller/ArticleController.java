@@ -44,7 +44,10 @@ public class ArticleController {
         //　article取得
         List<Article> articles = articleService.findByMonthArticle(firstDate, lastDate);
         model.addAttribute("articles",articles);
-		return "discard/main";
+        //カレンダーリンク用データ取得
+        model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(articleService,today));
+        model.addAttribute("today",today);
+        return "discard/main";
 	}
 	
 	@GetMapping("/toSave")

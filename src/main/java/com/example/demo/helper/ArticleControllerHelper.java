@@ -7,7 +7,11 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.entity.Article;
 import com.example.demo.form.ArticleForm;
 import com.example.demo.service.ArticleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ArticleControllerHelper {
 	//本日で時刻ゼロのDateを取得
@@ -23,6 +29,22 @@ public class ArticleControllerHelper {
        LocalDate localDate = originalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
        Date dateWithZeroTime = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
        return dateWithZeroTime;
+	}
+
+	//月初を取得
+	public static Date getMonthFirstDate(LocalDate date) {
+        LocalDate firstDayOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+        return firstDate;
+	}
+	
+	//月末を取得
+	public static Date getMonthLastDate(LocalDate date) {
+        LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+        return lastDate;
 	}
 	
 	//同日記事の存在確認
@@ -72,6 +94,7 @@ public class ArticleControllerHelper {
 	public static Article convertArticle(ArticleService service,ArticleForm form) {
 		return convertArticle(service, form, "");
 	}
+
 	//記事&画像削除
 	public static void deleteArticle(ArticleService service,String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,7 +108,7 @@ public class ArticleControllerHelper {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-     }
+    }
 	
 	//更新時の登録フォームを編集
 	public static ArticleForm editUpdateForm(ArticleService service,String dateString) {
@@ -104,7 +127,27 @@ public class ArticleControllerHelper {
             throw new RuntimeException(ex);
         }
 	}
-//	public static void main(String[] args) {
+
+	//カレンダーリンク用JSON取得
+	public static String getLinksJson(ArticleService service,LocalDate date) {
+		List<Article> articles = service.findByMonthArticle(getMonthFirstDate(date), getMonthLastDate(date));
+		Map<String,String> articleLinks = new HashMap<>();
+		for (Article article : articles) {
+			LocalDate localDate = article.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			articleLinks.put(localDate.toString(),"discard/" + localDate.toString());
+		}
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+			String linksJson = objectMapper.writeValueAsString(articleLinks);
+			System.out.println(linksJson);
+			return linksJson;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//	public static void main(String[] args) {
 //		System.out.println(addImagePath("image.jpg"));
 //	}
 }
