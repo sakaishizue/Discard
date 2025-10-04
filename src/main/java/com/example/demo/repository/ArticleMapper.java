@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -13,9 +13,9 @@ public interface ArticleMapper {
 	//全件取得
 	List<Article> selectAll(); 
 	//特定日付で取得
-	Article selectByDate(@Param("date") Date date);
+	Article selectByDate(@Param("date") LocalDate date);
 	//特定期間（月）で取得
-	List<Article> selectByMonth(@Param("startdate") Date startDate,@Param("enddate") Date endDate); 
+	List<Article> selectByMonth(@Param("startdate") LocalDate startDate,@Param("enddate") LocalDate endDate); 
 	//登録
 	void insert(Article article);
 	//更新
@@ -23,5 +23,5 @@ public interface ArticleMapper {
 	//更新2
 	void updateWithoutImageFileName(Article artilce);
 	//削除
-	void delete(@Param("date") Date date);
+	void delete(@Param("date") LocalDate date);
 }

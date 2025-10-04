@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,32 +21,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ArticleControllerHelper {
 	//本日で時刻ゼロのDateを取得
-	public static Date getDate() {
-       Date originalDate = new Date();
-       LocalDate localDate = originalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-       Date dateWithZeroTime = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-       return dateWithZeroTime;
+//	public static Date getDate() {
+//       Date originalDate = new Date();
+//       LocalDate localDate = originalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//       Date dateWithZeroTime = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//       return dateWithZeroTime;
+//	}
+	//dateStringをLocalDateに変換
+	public static LocalDate parseLocalDate(String dateString) {
+       	try {
+    	   	LocalDate date = LocalDate.parse(dateString);
+    	   	return date;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
 	}
 
 	//月初を取得
-	public static Date getMonthFirstDate(LocalDate date) {
+	public static LocalDate getMonthFirstDate(LocalDate date) {
         LocalDate firstDayOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
-        return firstDate;
+//        ZoneId defaultZoneId = ZoneId.systemDefault();
+//        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+//        return firstDate;
+        return firstDayOfMonth;
 	}
 	
 	//月末を取得
-	public static Date getMonthLastDate(LocalDate date) {
+	public static LocalDate getMonthLastDate(LocalDate date) {
         LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
-        return lastDate;
+//        ZoneId defaultZoneId = ZoneId.systemDefault();
+//        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+//        return lastDate;
+        return lastDayOfMonth;
 	}
 	
 	//同日記事の存在確認
-	public static boolean isExist(ArticleService articleService) {
-		if (articleService.findByDateArticle(getDate()) == null) {
+	public static boolean isExist(ArticleService articleService,LocalDate date) {
+		if (articleService.findByDateArticle(date) == null) {
 			return false;
 		}else {
 			return true;
@@ -57,9 +65,9 @@ public class ArticleControllerHelper {
 	}
 	
 	//新規登録時の登録フォームを編集
-	public static ArticleForm editSaveForm() {
+	public static ArticleForm editSaveForm(LocalDate date) {
 		ArticleForm form = new ArticleForm();
-		form.setDate(getDate());
+		form.setDate(date);
 		form.setEffortId(0);
 		form.setTrashTypeId(0);
 		form.setNew(true);
@@ -97,9 +105,8 @@ public class ArticleControllerHelper {
 
 	//記事&画像削除
 	public static void deleteArticle(ArticleService service,String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
        try {
-    	   	Date date = sdf.parse(dateString);
+    	   	LocalDate date = LocalDate.parse(dateString);
     	   	String fileName = service.findByDateArticle(date).getImageFileName();
     	    Path fileStorageLocation = Paths.get(System.getenv("IMAGE_UPLOAD_DIR")).toAbsolutePath().normalize();
     	    Path targetPath = fileStorageLocation.resolve(fileName).normalize();
@@ -112,10 +119,9 @@ public class ArticleControllerHelper {
 	
 	//更新時の登録フォームを編集
 	public static ArticleForm editUpdateForm(ArticleService service,String dateString) {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		ArticleForm form = new ArticleForm();
         try {
-    	    Article article = service.findByDateArticle(sdf.parse(dateString));
+    	    Article article = service.findByDateArticle(parseLocalDate(dateString));
         	form.setDate(article.getDate());
         	form.setTitle(article.getTitle());
         	form.setStoredImageFileName(article.getImageFileName());
@@ -133,8 +139,8 @@ public class ArticleControllerHelper {
 		List<Article> articles = service.findByMonthArticle(getMonthFirstDate(date), getMonthLastDate(date));
 		Map<String,String> articleLinks = new HashMap<>();
 		for (Article article : articles) {
-			LocalDate localDate = article.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			articleLinks.put(localDate.toString(),"discard/" + localDate.toString());
+			LocalDate localDate = article.getDate();
+			articleLinks.put(localDate.toString(),"/discard/search/" + localDate.toString());
 		}
         ObjectMapper objectMapper = new ObjectMapper();
         try {

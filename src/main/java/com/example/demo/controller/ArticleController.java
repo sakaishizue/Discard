@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -33,16 +31,16 @@ public class ArticleController {
 	
 	@GetMapping
 	public String initialView(Model model) {
-        // 月初、月末を取得
+        // 現在日付を取得
         LocalDate today = LocalDate.now();
-        LocalDate firstDayOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
-        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+//        LocalDate firstDayOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
+//        LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
+//        ZoneId defaultZoneId = ZoneId.systemDefault();
+//        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
+//        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
         
         //　article取得
-        List<Article> articles = articleService.findByMonthArticle(firstDate, lastDate);
+        List<Article> articles = articleService.findByMonthArticle(ArticleControllerHelper.getMonthFirstDate(today), ArticleControllerHelper.getMonthLastDate(today));
         model.addAttribute("articles",articles);
         //カレンダーリンク用データ取得
         model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(articleService,today));
@@ -50,16 +48,31 @@ public class ArticleController {
         return "discard/main";
 	}
 	
+	//指定日付の記事１件表示
+	@GetMapping("/search/{dateString}")
+	public String singleArticleView(@PathVariable String dateString, Model model) {
+        LocalDate date = ArticleControllerHelper.parseLocalDate(dateString);
+        //　article取得
+        Article article = articleService.findByDateArticle(date);
+        List<Article> articles = new ArrayList<Article>();
+        articles.add(article);
+        model.addAttribute("articles",articles);
+        //カレンダーリンク用データ取得
+        model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(articleService,date));
+        model.addAttribute("today",date);
+        return "discard/main";
+	}
+
 	@GetMapping("/toSave")
-//	public String toSave(@ModelAttribute ArticleForm form,RedirectAttributes attributes) {
 	public String toSave(Model model,RedirectAttributes attributes) {
 		//本日分の記事の存在チェック
-       if (ArticleControllerHelper.isExist(articleService)) {
+		LocalDate date = LocalDate.now();
+       if (ArticleControllerHelper.isExist(articleService,date)) {
     	   	attributes.addFlashAttribute("message","本日は既に記事が登録されています。");
     	   	return "redirect:/discard";
        }else {
         	//helperクラスでform情報を編集する
-     		model.addAttribute("articleForm",ArticleControllerHelper.editSaveForm());
+     		model.addAttribute("articleForm",ArticleControllerHelper.editSaveForm(date));
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());
     		return "discard/form";

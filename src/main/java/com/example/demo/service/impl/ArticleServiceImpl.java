@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,12 +31,12 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<Article> findByMonthArticle(Date startDate, Date endDate) {
+	public List<Article> findByMonthArticle(LocalDate startDate, LocalDate endDate) {
 		return articleMapper.selectByMonth(startDate, endDate);
 	}
 
 	@Override
-	public Article findByDateArticle(Date date) {
+	public Article findByDateArticle(LocalDate date) {
 		return articleMapper.selectByDate(date);
 	}
 
@@ -66,7 +66,7 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public void deleteArticle(Date date) {
+	public void deleteArticle(LocalDate date) {
 		articleMapper.delete(date);
 	}
 

@@ -125,7 +125,7 @@
 				<div th:if="${articles}">
 					<div th:each="article : ${articles}" class="article-container">
 					    <div class="article-header">
-					        <p class="article-date" th:text="${#dates.format(article.date, 'yyyy年MM月dd日')}"></p>
+					        <p class="article-date" th:text="${#temporals.format(article.date, 'yyyy年MM月dd日')}"></p>
 					        <h2 class="article-title" th:text="${article.title}"></h2>
 					    </div>
 					    <div class="article-image">
@@ -134,11 +134,11 @@
 					    <div class="article-comments">
 					        <span class="article-comment-tag" th:text="|種別：${article.trashType.name}|"></span>
 					        <span class="article-comment-tag" th:text="|手間：${article.effort.name}|"></span>
-							<span><a th:href="@{/discard/update/{date}(date=${#dates.format(article.date,'yyyy-MM-dd')})}">記事更新</a></span>
+							<span><a th:href="@{/discard/update/{date}(date=${#temporals.format(article.date,'yyyy-MM-dd')})}">記事更新</a></span>
 							<span><a
 								data-bs-toggle="modal"
 								data-bs-target="#confirmModal"
-								th:attr="data-url=@{/discard/delete/{date}(date=${#dates.format(article.date,'yyyy-MM-dd')})}">記事削除</a></span>
+								th:attr="data-url=@{/discard/delete/{date}(date=${#temporals.format(article.date,'yyyy-MM-dd')})}">記事削除</a></span>
 					    </div>
 					</div>
 				</div>

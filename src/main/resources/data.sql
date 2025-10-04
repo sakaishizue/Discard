@@ -1,14 +1,14 @@
 INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
 VALUES
-('2025-09-10','タイトル１','sampleimage1.png',0,0,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+('2025-10-10','タイトル１','sampleimage1.png',0,0,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
 VALUES
-('2025-09-18','タイトル２','sampleimage2.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+('2025-10-18','タイトル２','sampleimage2.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
 VALUES
-('2025-10-18','タイトル３','sampleimage1.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+('2025-10-20','タイトル３','sampleimage1.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 INSERT INTO t_type (id,name)
 VALUES

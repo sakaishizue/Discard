@@ -24,10 +24,10 @@
 			<li th:each="err:${#fields.errors('*')}" th:text="${err}" class="alert alert-danger"></li>
 		</ul>
 
-		<input type="hidden" name="date" th:value="${#dates.format(articleForm.date, 'yyyy-MM-dd')}">
+		<input type="hidden" name="date" th:value="${#temporals.format(articleForm.date, 'yyyy-MM-dd')}">
 	    <div class="px-3">
 	        <label class="fw-bold">＜投稿日＞</label>
-			<p class="form-control-plaintext" th:text="*{#dates.format(date, 'yyyy年MM月dd日')}"></p>
+			<p class="form-control-plaintext" th:text="*{#temporals.format(date, 'yyyy年MM月dd日')}"></p>
 	    </div>
 		
 	    <div class="px-3">

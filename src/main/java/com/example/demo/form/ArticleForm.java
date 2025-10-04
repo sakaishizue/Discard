@@ -1,6 +1,6 @@
 package com.example.demo.form;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ArticleForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd") 
-	private Date date;
+	private LocalDate date;
 	@NotNull(message = "タイトルを入力してください。")
 	@Size(min = 1,max = 30,message = "タイトルは{min}～{max}文字で入力してください")
 	private String title;

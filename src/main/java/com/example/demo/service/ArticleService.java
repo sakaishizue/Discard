@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.entity.Article;
@@ -11,9 +11,9 @@ public interface ArticleService {
 	//記事全件検索
 	List<Article> findAllArticle();
 	//記事範囲検索
-	List<Article> findByMonthArticle(Date startDate,Date endDate);
+	List<Article> findByMonthArticle(LocalDate startDate,LocalDate endDate);
 	//記事1件検索
-	Article findByDateArticle(Date date);
+	Article findByDateArticle(LocalDate date);
 	//ゴミ種別全検索
 	List<TrashType> findAllTrashtype();
 	//ゴミ種別1件検索
@@ -29,5 +29,5 @@ public interface ArticleService {
 	//記事更新(画像ファイル名以外)
 	void updateArticleWithoutImageFileName(Article article);
 	//記事削除
-	void deleteArticle(Date date);
+	void deleteArticle(LocalDate date);
 }
