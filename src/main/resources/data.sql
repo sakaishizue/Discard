@@ -8,7 +8,19 @@ VALUES
 
 INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
 VALUES
-('2025-10-20','タイトル３','sampleimage1.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+('2025-09-02','タイトル３','sampleimage1.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
+INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
+VALUES
+('2025-09-30','タイトル４','sampleimage2.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
+INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
+VALUES
+('2025-11-01','タイトル５','sampleimage1.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
+INSERT INTO article (discarded_date,title,imagefilename,trashtype,effort,created_at,updated_at)
+VALUES
+('2025-11-15','タイトル６','sampleimage2.png',1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 INSERT INTO t_type (id,name)
 VALUES

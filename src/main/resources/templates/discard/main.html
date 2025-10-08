@@ -77,14 +77,20 @@
 						}
 						
 					    document.addEventListener('DOMContentLoaded', function() {
+							let isInitialLoad = true;
 							const linksJson = /*[[${LinksJson}]]*/ null; // デフォルトをnullにしておく
 							// linksJson が null でない場合のみ parse し、nullなら空のオブジェクト{}を割り当てる
 							const articleLinks = linksJson ? JSON.parse(linksJson) : {};
 					        var calendarEl = document.getElementById('calendar');
+							//var initialDate = '[[${#temporals.format(today, \'yyyy-MM-dd\')}]]';
+							const dateStringFromJava = /*[[${today.toString()}]]*/ null;
+							var initialDate = new Date(dateStringFromJava);
+							//alert("today=" + '[[${today.toString()}]]');
+							//alert("initialDate=" + initialDate);
 					        var calendar = new FullCalendar.Calendar(calendarEl, {
 					            initialView: 'dayGridMonth',
 					            // サーバーから渡された日付を初期表示月に設定
-					            //initialDate: initialDate,
+					            initialDate: initialDate,
 					            // ... 他のオプション ...
 								buttonText: {
 								  today: '今月', // 'today' のテキストを「今日」に変更
@@ -98,6 +104,7 @@
 								// 日付セルのコンテンツをカスタマイズして枠線を追加
 								dayCellContent: function(arg) {
 									const dateStr = formatDate(arg.date);
+									//alert("arg.date=" + arg.date);
 									if (articleLinks[dateStr]) {
 									    return {
 									        html: `<a href="${articleLinks[dateStr]}" class="article-link">${arg.date.getDate()}</a>`
@@ -105,7 +112,31 @@
 									}
 									return { html: arg.date.getDate() };
 								},
-					        });
+								datesSet: function(info) {
+								  // 初回読み込み時はリダイレクトさせずに処理を終了
+								  if (isInitialLoad) {
+								    isInitialLoad = false; // 次回以降は実行されるようにフラグを倒す
+								    return;
+								  }
+								  // 新しく表示された期間の開始日を取得
+								  let startDate = new Date(info.start);
+								  startDate.setDate(startDate.getDate() + 10);
+								  console.log('startDate:', startDate);
+								  // 年と月を取得 (JavaScriptの月は0から始まるため+1する)
+								  const year = startDate.getFullYear();
+								  const month = startDate.getMonth() + 1;
+								  // 月をゼロ埋め2桁にフォーマット (例: 9月 -> '09')
+								  const monthFormatted = String(month).padStart(2, '0');
+								  // 目的のURLを組み立てる
+								  const targetUrl = `/discard/search/${year}-${monthFormatted}`;
+								  // (デバッグ用) コンソールにURLを出力して確認
+								  console.log('Redirecting to:', targetUrl);
+								  // 組み立てたURLへページを遷移させる
+								  if (window.location.pathname !== targetUrl) {
+								      window.location.href = targetUrl;
+								  }
+								}
+							});
 					        calendar.render();
 					    });
 						/*]]>*/

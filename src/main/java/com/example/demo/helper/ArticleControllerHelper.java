@@ -5,12 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Article;
@@ -152,7 +155,32 @@ public class ArticleControllerHelper {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	//記事１件の画面編集
+	public static void singleArticleView(ArticleService service,String dateString,Model model) {
+		LocalDate date = ArticleControllerHelper.parseLocalDate(dateString);
+        //　article取得
+        Article article = service.findByDateArticle(date);
+        List<Article> articles = new ArrayList<Article>();
+        articles.add(article);
+        model.addAttribute("articles",articles);
+        //カレンダーリンク用データ取得
+        model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(service,date));
+        model.addAttribute("today",date);
+	}
+
+	//記事１月分の画面編集
+	public static void monthArticleView(ArticleService service,String dateString,Model model) {
+		//月初を取得
+		YearMonth yearMonth = YearMonth.parse(dateString);
+		LocalDate date = yearMonth.atDay(1);
+        //　article取得
+        List<Article> articles = service.findByMonthArticle(ArticleControllerHelper.getMonthFirstDate(date), ArticleControllerHelper.getMonthLastDate(date));
+        model.addAttribute("articles",articles);
+        //カレンダーリンク用データ取得
+        model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(service,date));
+        model.addAttribute("today",date);
+	}
 	//	public static void main(String[] args) {
 //		System.out.println(addImagePath("image.jpg"));
 //	}

@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -33,12 +32,6 @@ public class ArticleController {
 	public String initialView(Model model) {
         // 現在日付を取得
         LocalDate today = LocalDate.now();
-//        LocalDate firstDayOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
-//        LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
-//        ZoneId defaultZoneId = ZoneId.systemDefault();
-//        Date firstDate = Date.from(firstDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
-//        Date lastDate = Date.from(lastDayOfMonth.atStartOfDay(defaultZoneId).toInstant());
-        
         //　article取得
         List<Article> articles = articleService.findByMonthArticle(ArticleControllerHelper.getMonthFirstDate(today), ArticleControllerHelper.getMonthLastDate(today));
         model.addAttribute("articles",articles);
@@ -48,18 +41,14 @@ public class ArticleController {
         return "discard/main";
 	}
 	
-	//指定日付の記事１件表示
+	//指定日付の記事表示（１件と１か月分）
 	@GetMapping("/search/{dateString}")
-	public String singleArticleView(@PathVariable String dateString, Model model) {
-        LocalDate date = ArticleControllerHelper.parseLocalDate(dateString);
-        //　article取得
-        Article article = articleService.findByDateArticle(date);
-        List<Article> articles = new ArrayList<Article>();
-        articles.add(article);
-        model.addAttribute("articles",articles);
-        //カレンダーリンク用データ取得
-        model.addAttribute("LinksJson",ArticleControllerHelper.getLinksJson(articleService,date));
-        model.addAttribute("today",date);
+	public String searchView(@PathVariable String dateString, Model model) {
+		if (dateString.length() == 7) {
+			ArticleControllerHelper.monthArticleView(articleService,dateString,model);
+		} else {
+			ArticleControllerHelper.singleArticleView(articleService,dateString,model);
+		}
         return "discard/main";
 	}
 
