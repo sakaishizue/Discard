@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -69,21 +68,29 @@ public class ArticleController {
 	}
 
 	@PostMapping("/saveArticle")
-	@Transactional
+//	@Transactional
 	public String saveArticle(@Validated ArticleForm form,BindingResult result,RedirectAttributes attributes,Model model) {
 		if (result.hasErrors()) {
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());
 			return "discard/form";
 		}
-		
+		//イメージファイル未指定の場合
 		if (form.getImageFile().isEmpty() && form.isNew()) {
 			result.rejectValue("imageFile", "error.imageFile", "ファイルが選択されていません。");
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());
 			return "discard/form";
 		}
-        try {
+		//画像ファイル以外の場合
+		String contentType = form.getImageFile().getContentType();
+		if (contentType != null && !contentType.startsWith("image/")) {
+			result.rejectValue("imageFile", "error.imageFile", "画像ファイル以外が選択されています。");
+     		model.addAttribute("trashTypes",articleService.findAllTrashtype());
+     		model.addAttribute("efforts",articleService.findAllEffort());
+			return "discard/form";
+		}
+		try {
             if (form.isNew()) {
                 String storedFileName = ArticleControllerHelper.storeFile(form.getImageFile());
             	articleService.insertArticle(ArticleControllerHelper.convertArticle(articleService,form,storedFileName));
@@ -95,13 +102,17 @@ public class ArticleController {
             		articleService.updateArticle(ArticleControllerHelper.convertArticle(articleService,form,storedFileName));
             	}
             }
-        	attributes.addFlashAttribute("successMessage", "登録に成功しました。");
+            if (form.isNew()) {
+            	attributes.addFlashAttribute("successMessage", "記事登録に成功しました。");
+            } else {
+            	attributes.addFlashAttribute("successMessage", "記事更新に成功しました。");
+            }
         	return "redirect:/discard";
         } catch (RuntimeException e) {
         	e.printStackTrace();
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());
-			result.rejectValue("imageFile", "error.imageFile", "登録に失敗しました。");
+			result.rejectValue("imageFile", "error.imageFile", "登録または更新に失敗しました。");
             return "discard/form";
         }
 	}

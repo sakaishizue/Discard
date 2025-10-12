@@ -36,12 +36,12 @@
     margin-bottom: 20px;
 }
 .article-image img {
-/*    max-width: 100%;*/
+    max-width: 100%;
 /*    height: auto;*/
     border-radius: 8px;
     display: block;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	max-height: 400px;
+	max-height: 500px;
 	width: auto;
 }
 .article-comments {
@@ -65,6 +65,13 @@ h1 {
     font-size: 2.5em;
     font-weight: 800;
 }
+.fc-daygrid-day {
+  padding: 5px; /* セルの内側に余白を追加 */
+/*  border: 1px solid #9090e0 ;    セルに細いボーダーを追加して間隔を明確に */
+}
+/*.fc-daygrid-day:not(.fc-day-other) {*/
+/*  background-color: lightblue;*/
+/*}*/
 .fc-daygrid-day-top {
   display: flex;
   justify-content: center;
@@ -82,4 +89,12 @@ h1 {
     color: #2c3e50;
     background-color: #f2f2f2;
     border-radius: 50%;
+}
+.fc .fc-col-header-cell-cushion {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+}
+#calendar {
+  margin-bottom: 70px; /* カレンダーの下に20pxの余白を設ける */
 }

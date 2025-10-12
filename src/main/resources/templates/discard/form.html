@@ -20,11 +20,15 @@
 	</div>
 
 	<form th:action="@{/discard/saveArticle}" method="post" th:object="${articleForm}" enctype="multipart/form-data">
-		<ul th:if="${#fields.hasErrors('*')}">
-			<li th:each="err:${#fields.errors('*')}" th:text="${err}" class="alert alert-danger"></li>
-		</ul>
-
+<!--		<div th:if="${#fields.hasErrors('*')}">-->
+<!--			<span th:each="err:${#fields.errors('*')}" class="alert alert-danger">・[[${err}]]</span>-->
+<!--		</div>-->
+		<div th:if="${#fields.hasErrors('*')}" th:each="err:${#fields.errors('*')}" class="alert alert-danger">
+			・[[${err}]]
+		</div>
 		<input type="hidden" name="date" th:value="${#temporals.format(articleForm.date, 'yyyy-MM-dd')}">
+		<input type="hidden" name="new" th:value="*{isNew}">
+		<input type="hidden" th:field="*{storedImageFileName}">
 	    <div class="px-3">
 	        <label class="fw-bold">＜投稿日＞</label>
 			<p class="form-control-plaintext" th:text="*{#temporals.format(date, 'yyyy年MM月dd日')}"></p>

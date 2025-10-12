@@ -18,9 +18,6 @@
                 width: auto !important;
             }
         }
-		.fc-daygrid-day-frame {
-		    border: 1px solid #ccc; /* 枠線のスタイル */
-		}
 		.custom-day-link {
 		    display: block;
 		    padding: 4px;
@@ -43,7 +40,7 @@
     <div class="container-fluid">
         <div class="row">
             
-            <nav class="col-lg-3 bg-light p-3 pt-5 pb-4">
+            <nav class="col-lg-3 bg-light p-3 pt-5 pb-4 min-vh-100">
                 <button class="btn btn-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
                     サイドバーを開く
                 </button>
@@ -107,10 +104,20 @@
 									//alert("arg.date=" + arg.date);
 									if (articleLinks[dateStr]) {
 									    return {
-									        html: `<a href="${articleLinks[dateStr]}" class="article-link">${arg.date.getDate()}</a>`
+									        html: `<a href="${articleLinks[dateStr]}" class="article-link" style="background-color: lightblue">${arg.date.getDate()}</a>`
 									    };
 									}
 									return { html: arg.date.getDate() };
+								},
+								// 各日付セルがマウントされたときに実行される
+								dayCellDidMount: function(arg) {
+								  // 日付を 'YYYY-MM-DD' 形式で取得
+								  const dateStr = formatDate(arg.date);
+								  // 特定の日付リストに含まれているかチェック
+								  if (articleLinks[dateStr]) {
+								    // セルの背景色を変更
+								    arg.el.style.backgroundColor = '#ADD8E6'; // lighitblue
+								  }
 								},
 								datesSet: function(info) {
 								  // 初回読み込み時はリダイレクトさせずに処理を終了
@@ -150,7 +157,7 @@
                 </div>
             </nav>
 
-            <main class="content-wrapper col-lg-9 p-3 pt-5 pb-4" style="background-color: #f0fff0;"　>
+            <main class="content-wrapper col-lg-9 p-3 pt-5 pb-4 min-vh-100" style="background-color: #f0fff0;"　>
 				<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 				<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 				<div th:if="${articles}">

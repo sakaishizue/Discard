@@ -19,14 +19,14 @@ public class ArticleForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private LocalDate date;
 	@NotNull(message = "タイトルを入力してください。")
-	@Size(min = 1,max = 30,message = "タイトルは{min}～{max}文字で入力してください")
+	@Size(min = 1,max = 30,message = "タイトルは{min}～{max}文字で入力してください。")
 	private String title;
 	@NotNull(message = "画像を選択してください。")
 	private MultipartFile imageFile;
 	private String storedImageFileName;
 	@NotNull(message = "ゴミ種別を選択してください。")
 	private Integer trashTypeId;
-	@NotNull(message = "労力を選択してください。")
+	@NotNull(message = "ゴミ出し労力を選択してください。")
 	private Integer effortId;
 	private boolean isNew;
 }

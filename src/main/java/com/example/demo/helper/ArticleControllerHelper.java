@@ -148,7 +148,7 @@ public class ArticleControllerHelper {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
 			String linksJson = objectMapper.writeValueAsString(articleLinks);
-			System.out.println(linksJson);
+//			System.out.println(linksJson);
 			return linksJson;
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
