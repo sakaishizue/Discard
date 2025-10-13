@@ -84,7 +84,7 @@ public class ArticleController {
 		}
 		//画像ファイル以外の場合
 		String contentType = form.getImageFile().getContentType();
-		if (contentType != null && !contentType.startsWith("image/")) {
+		if (!form.getImageFile().isEmpty() && contentType != null && !contentType.startsWith("image/")) {
 			result.rejectValue("imageFile", "error.imageFile", "画像ファイル以外が選択されています。");
      		model.addAttribute("trashTypes",articleService.findAllTrashtype());
      		model.addAttribute("efforts",articleService.findAllEffort());

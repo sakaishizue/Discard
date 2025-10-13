@@ -1,7 +1,8 @@
 DROP TABLE IF EXISTS article;
 DROP TABLE IF EXISTS t_type;
 DROP TABLE IF EXISTS t_effort;
-
+DROP TABLE IF EXISTS authentications;
+ 
 CREATE TABLE article (
 	discarded_date DATE PRIMARY KEY,
 	title VARCHAR(30) NOT NULL,
@@ -21,3 +22,8 @@ CREATE TABLE t_effort (
 	id INT PRIMARY KEY,
 	name VARCHAR(10)
 );
+
+CREATE TABLE authentications (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL
+ );

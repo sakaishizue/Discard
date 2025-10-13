@@ -29,15 +29,15 @@
                     ログアウトしました。
                 </div>
 
-                <form th:action="@{/login}" method="post">
+                <form th:action="@{/authentication}" method="post">
                     <div class="input-group mb-3">
                         <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="ユーザー名" required autofocus>
+                        <input type="text" class="form-control" id="usernameInput" name="usernameInput" placeholder="ユーザー名" required autofocus>
                     </div>
 
                     <div class="input-group mb-4">
                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="パスワード" required>
+                        <input type="password" class="form-control" id="passwordInput" name="passwordInput" placeholder="パスワード" required>
                     </div>
                     
                     <div class="d-grid">
@@ -45,13 +45,13 @@
                     </div>
                 </form>
 
-                <div class="text-center mt-4">
-                    <a href="#" class="text-decoration-none">パスワードを忘れましたか？</a>
-                </div>
-                <hr>
-                <div class="text-center">
-                    <p class="mb-0">アカウントをお持ちでないですか？ <a href="#" class="text-decoration-none">新規登録</a></p>
-                </div>
+<!--                <div class="text-center mt-4">-->
+<!--                    <a href="#" class="text-decoration-none">パスワードを忘れましたか？</a>-->
+<!--                </div>-->
+<!--                <hr>-->
+<!--                <div class="text-center">-->
+<!--                    <p class="mb-0">アカウントをお持ちでないですか？ <a href="#" class="text-decoration-none">新規登録</a></p>-->
+<!--                </div>-->
 
             </div>
         </div>

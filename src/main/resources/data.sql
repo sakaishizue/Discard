@@ -57,3 +57,6 @@ VALUES
 INSERT INTO t_effort (id,name)
 VALUES
 (3,'★★★★');
+
+INSERT INTO authentications (username, password) VALUES
+ ('admin', '$2a$10$lNH4dLsCH4/g7aZZq14QG.PvnC7rkeN395ZWanW/hTOi5k6y009mm');
